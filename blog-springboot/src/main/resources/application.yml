@@ -10,9 +10,9 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://你的ip:3306/blog?serverTimezone=Asia/Shanghai&allowMultiQueries=true
-    username: MYSQL用户名
-    password: MYSQL密码
+    url: ${MYSQL_URL:jdbc:mysql://xxxx:3307/blog?serverTimezone=Asia/Shanghai&allowMultiQueries=true}
+    username: ${MYSQL_USERNAME:root}
+    password: ${MYSQL_PASSWORD:root}
     hikari:
       minimum-idle: 5
       # 空闲连接存活最大时间，默认600000（10分钟）
@@ -30,15 +30,15 @@ spring:
       connection-test-query: SELECT 1
   # redis配置
   redis:
-    host: 你的ip
-    port: 6379
-    password: Redis密码
+    host: ${REDIS_HOST:xxxx}
+    port: ${REDIS_PORT:xxxx}
+    password: ${REDIS_PASSWORD:xxxx}
   # mq配置
   rabbitmq:
-    host: 你的ip
-    port: 5672
-    username: rabbitmq用户名
-    password: rabbitmq密码
+    host: ${RABBITMQ_HOST:xxxx}
+    port: ${RABBITMQ_POST:xxxx}
+    username: ${RABBITMQ_USERNAME:xxxx}
+    password: ${RABBITMQ_PASSWORD:xxxx}
     listener:
       simple:
         retry:
@@ -48,12 +48,12 @@ spring:
   # es配置 若搜索模式为mysql可删除
   elasticsearch:
     rest:
-      uris: 你的IP:9200
+      uris: ${ES_IP_ADDR:XXX}
   # 邮箱配置
   mail:
     host: smtp.qq.com
-    username: 邮箱用户名
-    password: 邮箱授权码
+    username: ${MAIL_USERNAME:xxx@qq.com}
+    password: ${MAIL_PASSWORD:xxx}
     default-encoding: UTF-8
     port: 587
     properties:
@@ -72,49 +72,35 @@ spring:
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    #log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
 
 # 搜索模式 可选 elasticsearch或mysql
 search:
-  mode: mysql
+  mode: ${SEARCH_MODEL:mysql}
 
 
 # 上传模式 可选 oss或local  （http://和最后的/一定不能去！！！）
 upload:
-  mode: local
+  mode: ${UPLOAD_MODEL:oss}
   local:
     # nginx映射本地文件路径，无域名则为 ip:83
-    url: http://你的文件上传子域名/
+    url: http://116.205.241.47:8083/
     # 本地文件存储路径
     path: /usr/local/upload/
   oss:
-    url: http://Bucket域名/
-    endpoint: OSS配置endpoint
-    accessKeyId: OSS配置accessKeyId
-    accessKeySecret: OSS配置accessKeySecret
-    bucketName: OSS配置bucketName
-  cos:
-    url: http://Bucket域名/
-    secretId: cos的secretId
-    secretKey: cos的secretKey
-    region: cos的region
-    bucketName: cos的bucketName
+    url: ${OSS_URL:http://xxx.aliyuncs.com/}
+    endpoint: ${OSS_ENDPOINT:oss-cn-chengdu.aliyuncs.com}
+    accessKeyId: ${OSS_ACCESSKEYID:xxx}
+    accessKeySecret: ${OSS_ACCESSKEYSECRET:xxxx}
+    bucketName: ${OSS_NameBUCKETNAME:xiaofu1766}
 
 # 网站前台域名（邮件通知用）
 website:
-  url: http://你的主域名或ip
+  url: ${WEBSITE_URL:http://116.205.241.47}
 
 #第三方配置信息
 qq:
-  app-id: QQ APPID
+  app-id: ${QQ_APP_ID:QQ APPID}
   check-token-url: https://graph.qq.com/oauth2.0/me?access_token={access_token}
   user-info-url: https://graph.qq.com/user/get_user_info?openid={openid}&access_token={access_token}&oauth_consumer_key={oauth_consumer_key}
-
-weibo:
-  app-id: 微博APPID
-  app-secret: 微博APPSECRET
-  grant-type: authorization_code
-  redirect-url: 微博回调地址
-  access-token-url: https://api.weibo.com/oauth2/access_token
-  user-info-url: https://api.weibo.com/2/users/show.json?uid={uid}&access_token={access_token}
